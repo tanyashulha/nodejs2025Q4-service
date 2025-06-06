@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import 'dotenv/config';
 
 const PORT = process.env.PORT;
 const DEFAULT_PORT = 4000;
@@ -14,11 +15,9 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
 
-  SwaggerModule.setup(
-    'doc',
-    app,
-    SwaggerModule.createDocument(app, configuration),
-  );
+  const doc = SwaggerModule.createDocument(app, configuration);
+  SwaggerModule.setup('doc', app, doc);
+
   await app.listen(PORT || DEFAULT_PORT);
 }
 bootstrap();
