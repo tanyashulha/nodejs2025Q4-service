@@ -1,10 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { IAlbum } from 'src/intefaces/album.interface';
 import { v4 as uuid } from 'uuid';
+import { FavoriesDBService } from '../favorites-db/favorites-db.service';
 
 @Injectable()
 export class AlbumDBService {
   albums = new Map<string, IAlbum>();
+
+  constructor(
+    @Inject(forwardRef(() => FavoriesDBService))
+    private favoritesDBService: FavoriesDBService,
+  ) {}
 
   async add(album: IAlbum): Promise<IAlbum> {
     const id = uuid();
@@ -23,7 +29,7 @@ export class AlbumDBService {
     return Array.from(this.albums.values());
   }
 
-  async getAlbumById(id: string): Promise<IAlbum> {
+  getAlbumById(id: string): IAlbum {
     return this.albums.get(id);
   }
 
@@ -46,6 +52,10 @@ export class AlbumDBService {
     const existingAlbum = this.albums.get(id);
     if (existingAlbum) {
       this.albums.delete(id);
+      this.favoritesDBService.favorites.albums =
+        this.favoritesDBService.favorites.albums.filter(
+          (albumId) => albumId !== id,
+        );
       return existingAlbum;
     }
   }

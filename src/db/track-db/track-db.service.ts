@@ -1,10 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { ITrack } from 'src/intefaces/track.interface';
 import { v4 as uuid } from 'uuid';
+import { FavoriesDBService } from '../favorites-db/favorites-db.service';
 
 @Injectable()
 export class TrackDBService {
   tracks = new Map<string, ITrack>();
+
+  constructor(
+    @Inject(forwardRef(() => FavoriesDBService))
+    private favoritesDBService: FavoriesDBService,
+  ) {}
 
   async add(track: ITrack): Promise<ITrack> {
     const id = uuid();
@@ -24,7 +30,7 @@ export class TrackDBService {
     return Array.from(this.tracks.values());
   }
 
-  async getTrackById(id: string): Promise<ITrack> {
+  getTrackById(id: string): ITrack {
     return this.tracks.get(id);
   }
 
@@ -48,6 +54,7 @@ export class TrackDBService {
     const existingTrack = this.tracks.get(id);
     if (existingTrack) {
       this.tracks.delete(id);
+      this.favoritesDBService.deleteTrackFromFavorites(id);
       return existingTrack;
     }
   }

@@ -4,10 +4,7 @@ import { FavoritesModule } from './favorites/favorites.module';
 import { ArtistModule } from './artist/artist.module';
 import { UserModule } from './user/user.module';
 import { AlbumModule } from './album/album.module';
-import { UserDBModule } from './db/user-db/user-db.module';
-import { ArtistDBModule } from './db/artist-db/artist-db.module';
-import { AlbumDBModule } from './db/album-db/album-db.module';
-import { TrackDBModule } from './db/track-db/track-db.module';
+import { DatabaseModule } from './db/db.module';
 
 @Module({
   imports: [
@@ -16,10 +13,7 @@ import { TrackDBModule } from './db/track-db/track-db.module';
     ArtistModule,
     UserModule,
     AlbumModule,
-    UserDBModule,
-    ArtistDBModule,
-    TrackDBModule,
-    AlbumDBModule,
+    DatabaseModule,
   ],
 })
 export class AppModule {}
