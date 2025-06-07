@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateArtistDto } from './create-artist-dto';
-import { UpdateArtistDto } from './update-artist-dto';
+import { CreateArtistDto } from './create-artist.dto';
+import { UpdateArtistDto } from './update-artist.dto';
 import { ArtistDBService } from 'src/db/artist-db/artist-db.service';
 
 @Injectable()

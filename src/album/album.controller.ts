@@ -11,8 +11,8 @@ import {
   Put,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
-import { CreateAlbumDto } from './create-album-dto';
-import { UpdateAlbumDto } from './update-album-dto';
+import { CreateAlbumDto } from './create-album.dto';
+import { UpdateAlbumDto } from './update-album.dto';
 
 @Controller('album')
 export class AlbumController {
