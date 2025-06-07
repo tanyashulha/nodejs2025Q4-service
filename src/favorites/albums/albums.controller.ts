@@ -9,7 +9,9 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { FavoriteAlbumService } from './albums.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Favorites')
 @Controller('favorites/albums')
 export class FavoriteAlbumController {
   constructor(private service: FavoriteAlbumService) {}
