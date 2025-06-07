@@ -19,7 +19,13 @@ export class UserDBService {
     };
     this.users.set(id, newUser);
 
-    return newUser;
+    return {
+      id,
+      login,
+      version,
+      createdAt,
+      updatedAt,
+    };
   }
 
   async getAllUsers(): Promise<Array<IUser>> {
@@ -43,7 +49,13 @@ export class UserDBService {
     };
     this.users.set(user?.id, userToUpdate);
 
-    return userToUpdate;
+    return {
+      id: user?.id,
+      createdAt: existingUser.createdAt,
+      login: user.login,
+      version: user.version,
+      updatedAt: user.updatedAt,
+    };
   }
 
   async deleteUserById(id: string): Promise<IUser> {

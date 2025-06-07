@@ -1,5 +1,5 @@
 import { UserDBService } from './../db/user-db/user-db.service';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './create-user-dto';
 import { UpdateUserDto } from './update-uset-dto';
 
@@ -27,19 +27,13 @@ export class UserService {
   async updateUserById(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.getUserById(id);
 
-    if (user.password !== updateUserDto.oldPassword)
-      throw new ForbiddenException();
-
     const updatedUser = {
       ...user,
+      version: user.version + 1,
       password: updateUserDto.newPassword,
     };
 
-    return this.userDbService.updateUserById(
-      await {
-        ...updatedUser,
-      },
-    );
+    return this.userDbService.updateUserById(updatedUser);
   }
 
   async deleteUserById(id: string) {

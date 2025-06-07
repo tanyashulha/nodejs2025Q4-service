@@ -2,8 +2,10 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   HttpCode,
+  NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
@@ -37,7 +39,9 @@ export class UserController {
 
   @Get(':id')
   async getUserById(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.userService.getUserById(id);
+    const user = await this.userService.getUserById(id);
+    if (user) return user;
+    throw new NotFoundException();
   }
 
   @Put(':id')
@@ -45,12 +49,25 @@ export class UserController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return await this.userService.updateUserById(id, updateUserDto);
+    const existingUser = await this.userService.getUserById(id);
+
+    if (!existingUser) throw new NotFoundException();
+
+    if (existingUser.password !== updateUserDto.oldPassword)
+      throw new ForbiddenException();
+
+    const updated = this.userService.updateUserById(id, updateUserDto);
+
+    if (updated) return updated;
+
+    throw new NotFoundException();
   }
 
   @Delete(':id')
   @HttpCode(204)
   async deleteUserById(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.userService.deleteUserById(id);
+    const existingUser = await this.userService.deleteUserById(id);
+    if (existingUser) return true;
+    throw new NotFoundException();
   }
 }

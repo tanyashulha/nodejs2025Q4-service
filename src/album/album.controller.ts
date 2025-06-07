@@ -51,8 +51,7 @@ export class AlbumController {
   @HttpCode(204)
   async deleteAlbumById(@Param('id', ParseUUIDPipe) id: string) {
     const isAlbumDeleted = await this.albumService.deleteAlbumById(id);
-    if (!isAlbumDeleted) throw new NotFoundException();
-
-    return '';
+    if (isAlbumDeleted) return true;
+    throw new NotFoundException();
   }
 }
