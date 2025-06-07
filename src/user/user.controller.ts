@@ -18,13 +18,21 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Post()
-  post(@Body() createUserDto: CreateUserDto) {
-    return this.userService.post(createUserDto);
+  async post(@Body() createUserDto: CreateUserDto) {
+    return await this.userService.post(createUserDto);
   }
 
   @Get()
-  getAllUsers() {
-    return this.userService.getAllUsers();
+  async getAllUsers() {
+    const users = await this.userService.getAllUsers();
+
+    return users.map((user) => ({
+      id: user.id,
+      login: user.login,
+      version: user.version,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    }));
   }
 
   @Get(':id')
