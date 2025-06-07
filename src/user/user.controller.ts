@@ -36,21 +36,21 @@ export class UserController {
   }
 
   @Get(':id')
-  getUserById(@Param('id', ParseUUIDPipe) id: string) {
-    return this.userService.getUserById(id);
+  async getUserById(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.userService.getUserById(id);
   }
 
   @Put(':id')
-  updateUserById(
+  async updateUserById(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.userService.updateUserById(id, updateUserDto);
+    return await this.userService.updateUserById(id, updateUserDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  deleteUserById(@Param('id', ParseUUIDPipe) id: string) {
-    return this.userService.deleteUserById(id);
+  async deleteUserById(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.userService.deleteUserById(id);
   }
 }

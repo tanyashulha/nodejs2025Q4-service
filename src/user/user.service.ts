@@ -16,12 +16,12 @@ export class UserService {
     });
   }
 
-  getAllUsers() {
-    return this.userDbService.getAllUsers();
+  async getAllUsers() {
+    return await this.userDbService.getAllUsers();
   }
 
-  getUserById(id: string) {
-    return this.userDbService.findById(id);
+  async getUserById(id: string) {
+    return await this.userDbService.findById(id);
   }
 
   async updateUserById(id: string, updateUserDto: UpdateUserDto) {
@@ -42,7 +42,7 @@ export class UserService {
     );
   }
 
-  deleteUserById(id: string) {
-    return this.userDbService.deleteUserById(id);
+  async deleteUserById(id: string) {
+    return await this.userDbService.deleteUserById(id);
   }
 }

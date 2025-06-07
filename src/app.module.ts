@@ -6,8 +6,8 @@ import { UserModule } from './user/user.module';
 import { AlbumModule } from './album/album.module';
 import { UserDBModule } from './db/user-db/user-db.module';
 import { ArtistDBModule } from './db/artist-db/artist-db.module';
-import { TrackDBService } from './db/track-db/track-db.service';
 import { AlbumDBModule } from './db/album-db/album-db.module';
+import { TrackDBModule } from './db/track-db/track-db.module';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { AlbumDBModule } from './db/album-db/album-db.module';
     AlbumModule,
     UserDBModule,
     ArtistDBModule,
-    TrackDBService,
+    TrackDBModule,
     AlbumDBModule,
   ],
 })
