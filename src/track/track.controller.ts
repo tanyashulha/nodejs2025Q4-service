@@ -12,6 +12,7 @@ import {
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './create-track.dto';
 import { UpdateTrackDto } from './update-track.dto';
+import { Track } from 'src/entities/track.entity';
 
 @Controller('track')
 export class TrackController {
@@ -19,18 +20,21 @@ export class TrackController {
 
   @Post()
   post(@Body() dto: CreateTrackDto) {
-    return this.trackService.post(dto);
+    const track = this.trackService.post(dto);
+
+    return new Track(track);
   }
 
   @Get()
-  getAllTracks() {
-    return this.trackService.getAllTracks();
+  async getAllTracks() {
+    const tracks = await this.trackService.getAllTracks();
+    return tracks.map((track) => new Track(track));
   }
 
   @Get(':id')
   async getTrackById(@Param('id', ParseUUIDPipe) id: string) {
     const existingTrack = await this.trackService.getTrackById(id);
-    if (existingTrack) return existingTrack;
+    if (existingTrack) return new Track(existingTrack);
 
     throw new NotFoundException();
   }
@@ -41,7 +45,7 @@ export class TrackController {
     @Body() dto: UpdateTrackDto,
   ) {
     const updatedTrack = await this.trackService.updateTrackById(id, dto);
-    if (updatedTrack) return updatedTrack;
+    if (updatedTrack) return true;
 
     throw new NotFoundException();
   }
@@ -49,8 +53,7 @@ export class TrackController {
   @Delete(':id')
   async deleteTrackById(@Param('id', ParseUUIDPipe) id: string) {
     const isTrackDeleted = await this.trackService.deleteTrackById(id);
-    if (!isTrackDeleted) throw new NotFoundException();
-
-    return '';
+    if (isTrackDeleted) return true;
+    throw new NotFoundException();
   }
 }

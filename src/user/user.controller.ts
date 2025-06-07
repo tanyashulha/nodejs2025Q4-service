@@ -14,6 +14,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './create-user.dto';
 import { UpdateUserDto } from './update-uset.dto';
+import { User } from 'src/entities/user.entity';
 
 @Controller('user')
 export class UserController {
@@ -21,26 +22,31 @@ export class UserController {
 
   @Post()
   async post(@Body() createUserDto: CreateUserDto) {
-    return await this.userService.post(createUserDto);
+    const newUser = await this.userService.post(createUserDto);
+
+    return new User(newUser);
   }
 
   @Get()
   async getAllUsers() {
     const users = await this.userService.getAllUsers();
 
-    return users.map((user) => ({
-      id: user.id,
-      login: user.login,
-      version: user.version,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    }));
+    return users.map(
+      (user) =>
+        new User({
+          id: user.id,
+          login: user.login,
+          version: user.version,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+        }),
+    );
   }
 
   @Get(':id')
   async getUserById(@Param('id', ParseUUIDPipe) id: string) {
     const user = await this.userService.getUserById(id);
-    if (user) return user;
+    if (user) return new User(user);
     throw new NotFoundException();
   }
 
@@ -58,7 +64,7 @@ export class UserController {
 
     const updated = this.userService.updateUserById(id, updateUserDto);
 
-    if (updated) return updated;
+    if (updated) return true;
 
     throw new NotFoundException();
   }

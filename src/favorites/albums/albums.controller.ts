@@ -27,7 +27,7 @@ export class FavoriteAlbumController {
   @HttpCode(204)
   async deleteAlbum(@Param('id', ParseUUIDPipe) id: string) {
     const deletedAlbum = await this.service.deleteAlbum(id);
-    if (deletedAlbum) return deletedAlbum;
+    if (deletedAlbum) return true;
     throw new NotFoundException();
   }
 }

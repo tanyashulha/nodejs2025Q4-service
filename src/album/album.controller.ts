@@ -13,6 +13,7 @@ import {
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './create-album.dto';
 import { UpdateAlbumDto } from './update-album.dto';
+import { Album } from 'src/entities/album.entity';
 
 @Controller('album')
 export class AlbumController {
@@ -20,18 +21,22 @@ export class AlbumController {
 
   @Post()
   post(@Body() dto: CreateAlbumDto) {
-    return this.albumService.post(dto);
+    const newAlbum = this.albumService.post(dto);
+
+    return new Album(newAlbum);
   }
 
   @Get()
-  getAllAlbums() {
-    return this.albumService.getAllAlbums();
+  async getAllAlbums() {
+    const albums = await this.albumService.getAllAlbums();
+
+    return albums.map((album) => new Album(album));
   }
 
   @Get(':id')
   async getAlbumById(@Param('id', ParseUUIDPipe) id: string) {
     const album = await this.albumService.getAlbumById(id);
-    if (album) return album;
+    if (album) return new Album(album);
 
     throw new NotFoundException();
   }
@@ -42,7 +47,7 @@ export class AlbumController {
     @Body() dto: UpdateAlbumDto,
   ) {
     const updatedAlbum = await this.albumService.updateAlbumById(id, dto);
-    if (updatedAlbum) return updatedAlbum;
+    if (updatedAlbum) return true;
 
     throw new NotFoundException();
   }
