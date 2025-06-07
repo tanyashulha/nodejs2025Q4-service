@@ -39,7 +39,7 @@ export class UserDBService {
       login: user.login,
       password: user.password,
       version: user.version,
-      updatedAt: user?.updatedAt,
+      updatedAt: user.updatedAt,
     };
     this.users.set(user?.id, userToUpdate);
 
