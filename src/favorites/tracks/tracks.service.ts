@@ -1,15 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { FavoriesDBService } from 'src/db/favorites-db/favorites-db.service';
+import { DataBaseService } from 'src/db/db.service';
 
 @Injectable()
 export class FavoriteTrackService {
-  constructor(private favoritesDBService: FavoriesDBService) {}
+  constructor(private favoritesDBService: DataBaseService) {}
 
-  createTrack(id: string) {
-    return this.favoritesDBService.addTrackToFavorites(id);
+  async createTrack(id: string) {
+    return await this.favoritesDBService.favoriteTracks.create({
+      data: { trackId: id },
+      select: { track: true },
+    });
   }
 
-  deleteTrack(id: string) {
-    return this.favoritesDBService.deleteTrackFromFavorites(id);
+  async deleteTrack(id: string) {
+    return await this.favoritesDBService.favoriteTracks.delete({
+      where: { trackId: id },
+    });
   }
 }
