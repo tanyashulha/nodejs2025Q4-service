@@ -1,29 +1,38 @@
 import { Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './create-artist.dto';
 import { UpdateArtistDto } from './update-artist.dto';
-import { ArtistDBService } from 'src/db/artist-db/artist-db.service';
+import { DataBaseService } from 'src/db/db.service';
 
 @Injectable()
 export class ArtistService {
-  constructor(private artistDbService: ArtistDBService) {}
+  constructor(private artistDbService: DataBaseService) {}
 
-  post(dto: CreateArtistDto) {
-    return this.artistDbService.add(dto);
+  post(artist: CreateArtistDto) {
+    return this.artistDbService.artist.create({
+      data: artist,
+    });
   }
 
   getAllArtists() {
-    return this.artistDbService.getAllArtists();
+    return this.artistDbService.artist.findMany();
   }
 
   getArtistById(id: string) {
-    return this.artistDbService.getArtistById(id);
+    return this.artistDbService.artist.findUnique({
+      where: { id },
+    });
   }
 
-  updateArtistById(id: string, dto: UpdateArtistDto) {
-    return this.artistDbService.updateArtistById({ ...dto, id });
+  async updateArtistById(id: string, dto: UpdateArtistDto) {
+    return await this.artistDbService.artist.update({
+      where: { id },
+      data: dto,
+    });
   }
 
-  deleteArtistById(id: string) {
-    return this.artistDbService.deleteArtistById(id);
+  async deleteArtistById(id: string) {
+    return await this.artistDbService.artist.delete({
+      where: { id },
+    });
   }
 }
