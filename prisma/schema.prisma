@@ -15,3 +15,54 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Album {
+  id          String     @id @default(uuid())
+  name        String
+  year        Int
+  artist      Artist?    @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  artistId    String?
+  tracks      Track[]
+  favoriteAlbums FavoriteAlbums[]
+}
+
+model FavoriteAlbums {
+  albumId String
+  album   Album  @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+  @@id([albumId])
+}
+
+model Artist {
+  id          String     @id @default(uuid())
+  name        String
+  grammy      Boolean
+  albums      Album[]
+  tracks      Track[]
+  favoriteArtists FavoriteArtists[]
+}
+
+model FavoriteArtists {
+  artistId String
+  artist   Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@id([artistId])
+}
+
+model Track {
+  id          String     @id @default(uuid())
+  name        String
+  duration    Int
+  artist      Artist?    @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  artistId    String?
+  album       Album?     @relation(fields: [albumId], references: [id], onDelete: SetNull)
+  albumId     String?
+  favoriteTracks FavoriteTracks[]
+}
+
+model FavoriteTracks {
+  trackId String
+  track   Track  @relation(fields: [trackId], references: [id], onDelete: Cascade)
+
+  @@id([trackId])
+}
