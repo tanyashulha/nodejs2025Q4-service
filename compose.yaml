@@ -1,0 +1,11 @@
+services:
+  app:
+    container_name: home-library-rest-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    image: tatsianashulha/home-library-rest-service
+    ports:
+      - '4000:4000'
+
