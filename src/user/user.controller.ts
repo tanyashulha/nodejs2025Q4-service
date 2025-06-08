@@ -62,7 +62,10 @@ export class UserController {
     if (existingUser.password !== updateUserDto.oldPassword)
       throw new ForbiddenException();
 
-    const updated = this.userService.updateUserById(id, updateUserDto);
+    const updated = this.userService.updateUserById(
+      id,
+      updateUserDto.newPassword,
+    );
 
     if (updated) return true;
 

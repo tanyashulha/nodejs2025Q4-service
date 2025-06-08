@@ -1,11 +1,39 @@
 services:
   app:
     container_name: home-library-rest-service
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     restart: always
     image: tatsianashulha/home-library-rest-service
+    environment:
+      - PORT=${PORT}
+    volumes:
+      - ./src:/app/src
+    env_file:
+      - .env
+    depends_on:
+      - postgres
     ports:
-      - '4000:4000'
+      - ${PORT}:${PORT}
+    networks:
+      - hls-network
+  
+  postgres:
+    image: postgres:alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=${NAME}
+      - POSTGRES_USER=${USER}
+      - POSTGRES_PASSWORD=${PASSWORD}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - ${DB_PORT}:5432
+    networks:
+      - hls-network
 
+volumes:
+  postgres: {}
+
+networks:
+  hls-network:
+    driver: bridge
