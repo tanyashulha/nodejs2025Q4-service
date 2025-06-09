@@ -2,7 +2,7 @@ services:
   app:
     container_name: home-library-rest-service
     build: .
-    restart: always
+    restart: on-failure
     image: tatsianashulha/home-library-rest-service
     environment:
       - PORT=${PORT}
@@ -15,12 +15,13 @@ services:
     ports:
       - ${PORT}:${PORT}
     networks:
-      - hls-network
+      - ${NAME}
+    working_dir: /app
   
   postgres:
     image: tatsianashulha/home-library_database
     container_name: postgres
-    restart: always
+    restart: on-failure
     environment:
       - POSTGRES_DB=${NAME}
       - POSTGRES_USER=${USER}
@@ -30,11 +31,12 @@ services:
     ports:
       - ${DB_PORT}:5432
     networks:
-      - hls-network
+      - ${NAME}
 
 volumes:
   postgres: {}
 
 networks:
-  hls-network:
+  home-library-rest-service:
+    name: ${NAME}
     driver: bridge
