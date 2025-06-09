@@ -1,29 +1,58 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { CreateAlbumDto } from './create-album.dto';
 import { UpdateAlbumDto } from './update-album.dto';
-import { AlbumDBService } from 'src/db/album-db/album-db.service';
+import { DataBaseService } from 'src/db/db.service';
+import { Album } from 'src/entities/album.entity';
 
 @Injectable()
 export class AlbumService {
-  constructor(private albumDBService: AlbumDBService) {}
+  constructor(private albumDBService: DataBaseService) {}
 
-  post(dto: CreateAlbumDto) {
-    return this.albumDBService.add(dto);
+  async post(data: CreateAlbumDto) {
+    const album = await this.albumDBService.album.create({ data });
+
+    if (album) return new Album(album);
+    throw new UnprocessableEntityException();
   }
 
   getAllAlbums() {
-    return this.albumDBService.getAllAlbums();
+    return this.albumDBService.album.findMany();
   }
 
-  getAlbumById(id: string) {
-    return this.albumDBService.getAlbumById(id);
+  async getAlbumById(id: string) {
+    const album = await this.albumDBService.album.findUnique({
+      where: { id },
+    });
+
+    if (!album) throw new NotFoundException();
+
+    return new Album(album);
   }
 
-  updateAlbumById(id: string, dto: UpdateAlbumDto) {
-    return this.albumDBService.updateAlbumById({ ...dto, id });
+  async updateAlbumById(id: string, dto: UpdateAlbumDto) {
+    const album = await this.albumDBService.album.findUnique({
+      where: { id },
+    });
+
+    if (!album) throw new NotFoundException();
+
+    return await this.albumDBService.album.update({
+      where: { id },
+      data: dto,
+    });
   }
 
-  deleteAlbumById(id: string) {
-    return this.albumDBService.deleteAlbumById(id);
+  async deleteAlbumById(id: string) {
+    const album = await this.albumDBService.album.findUnique({
+      where: { id },
+    });
+
+    if (!album) throw new NotFoundException();
+
+    await this.albumDBService.album.delete({ where: { id } });
   }
 }

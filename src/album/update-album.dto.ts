@@ -1,4 +1,5 @@
 import { IsNumber, IsString } from 'class-validator';
+import { IsNullable } from 'src/track/is-nullable';
 
 export class UpdateAlbumDto {
   @IsString()
@@ -7,6 +8,7 @@ export class UpdateAlbumDto {
   @IsNumber()
   year: number;
 
+  @IsNullable()
   @IsString()
-  artistId: string;
+  artistId: string | null;
 }

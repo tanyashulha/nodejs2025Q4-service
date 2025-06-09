@@ -6,6 +6,10 @@ export class User {
   updatedAt: number;
 
   constructor(params) {
-    Object.assign(this, params);
+    Object.assign(this, {
+      ...params,
+      createdAt: params.createdAt?.getTime(),
+      updatedAt: params.updatedAt?.getTime(),
+    });
   }
 }

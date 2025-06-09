@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
@@ -20,10 +19,8 @@ export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
   @Post()
-  post(@Body() dto: CreateAlbumDto) {
-    const newAlbum = this.albumService.post(dto);
-
-    return new Album(newAlbum);
+  async post(@Body() dto: CreateAlbumDto) {
+    return await this.albumService.post(dto);
   }
 
   @Get()
@@ -35,10 +32,7 @@ export class AlbumController {
 
   @Get(':id')
   async getAlbumById(@Param('id', ParseUUIDPipe) id: string) {
-    const album = await this.albumService.getAlbumById(id);
-    if (album) return new Album(album);
-
-    throw new NotFoundException();
+    return await this.albumService.getAlbumById(id);
   }
 
   @Put(':id')
@@ -46,17 +40,12 @@ export class AlbumController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateAlbumDto,
   ) {
-    const updatedAlbum = await this.albumService.updateAlbumById(id, dto);
-    if (updatedAlbum) return true;
-
-    throw new NotFoundException();
+    return await this.albumService.updateAlbumById(id, dto);
   }
 
   @Delete(':id')
   @HttpCode(204)
   async deleteAlbumById(@Param('id', ParseUUIDPipe) id: string) {
-    const isAlbumDeleted = await this.albumService.deleteAlbumById(id);
-    if (isAlbumDeleted) return true;
-    throw new NotFoundException();
+    return await this.albumService.deleteAlbumById(id);
   }
 }

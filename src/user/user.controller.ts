@@ -22,9 +22,7 @@ export class UserController {
 
   @Post()
   async post(@Body() createUserDto: CreateUserDto) {
-    const newUser = await this.userService.post(createUserDto);
-
-    return new User(newUser);
+    return await this.userService.post(createUserDto);
   }
 
   @Get()
@@ -62,7 +60,10 @@ export class UserController {
     if (existingUser.password !== updateUserDto.oldPassword)
       throw new ForbiddenException();
 
-    const updated = this.userService.updateUserById(id, updateUserDto);
+    const updated = this.userService.updateUserById(
+      id,
+      updateUserDto.newPassword,
+    );
 
     if (updated) return true;
 
@@ -72,8 +73,6 @@ export class UserController {
   @Delete(':id')
   @HttpCode(204)
   async deleteUserById(@Param('id', ParseUUIDPipe) id: string) {
-    const existingUser = await this.userService.deleteUserById(id);
-    if (existingUser) return true;
-    throw new NotFoundException();
+    return await this.userService.deleteUserById(id);
   }
 }

@@ -1,29 +1,60 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { CreateTrackDto } from './create-track.dto';
 import { UpdateTrackDto } from './update-track.dto';
-import { TrackDBService } from 'src/db/track-db/track-db.service';
+import { DataBaseService } from 'src/db/db.service';
+import { Track } from 'src/entities/track.entity';
 
 @Injectable()
 export class TrackService {
-  constructor(private trackDBService: TrackDBService) {}
+  constructor(private trackDBService: DataBaseService) {}
 
-  post(dto: CreateTrackDto) {
-    return this.trackDBService.add(dto);
+  async post(track: CreateTrackDto) {
+    const created = await this.trackDBService.track.create({
+      data: track,
+    });
+
+    if (created) return new Track(created);
+    throw new UnprocessableEntityException();
   }
 
   getAllTracks() {
-    return this.trackDBService.getAllTracks();
+    return this.trackDBService.track.findMany();
   }
 
-  getTrackById(id: string) {
-    return this.trackDBService.getTrackById(id);
+  async getTrackById(id: string) {
+    const track = await this.trackDBService.track.findUnique({
+      where: { id },
+    });
+
+    if (!track) throw new NotFoundException();
+
+    return track;
   }
 
-  updateTrackById(id: string, dto: UpdateTrackDto) {
-    return this.trackDBService.updateTrackById({ ...dto, id });
+  async updateTrackById(id: string, dto: UpdateTrackDto) {
+    const track = await this.trackDBService.track.findUnique({
+      where: { id },
+    });
+
+    if (!track) throw new NotFoundException();
+
+    return await this.trackDBService.track.update({
+      where: { id },
+      data: dto,
+    });
   }
 
-  deleteTrackById(id: string) {
-    return this.trackDBService.deleteTrackById(id);
+  async deleteTrackById(id: string) {
+    const track = await this.trackDBService.track.findUnique({
+      where: { id },
+    });
+
+    if (!track) throw new NotFoundException();
+
+    await this.trackDBService.track.delete({ where: { id } });
   }
 }

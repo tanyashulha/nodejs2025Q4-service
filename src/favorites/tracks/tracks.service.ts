@@ -1,15 +1,39 @@
-import { Injectable } from '@nestjs/common';
-import { FavoriesDBService } from 'src/db/favorites-db/favorites-db.service';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
+import { DataBaseService } from 'src/db/db.service';
 
 @Injectable()
 export class FavoriteTrackService {
-  constructor(private favoritesDBService: FavoriesDBService) {}
+  constructor(private favoritesDBService: DataBaseService) {}
 
-  createTrack(id: string) {
-    return this.favoritesDBService.addTrackToFavorites(id);
+  async createTrack(id: string) {
+    const existing = await this.favoritesDBService.track.findUnique({
+      where: { id },
+    });
+
+    if (!existing) throw new UnprocessableEntityException();
+
+    const track = await this.favoritesDBService.favoriteTracks.create({
+      data: { trackId: id },
+      select: { track: true },
+    });
+
+    if (track) return track;
+    throw new UnprocessableEntityException();
   }
 
-  deleteTrack(id: string) {
-    return this.favoritesDBService.deleteTrackFromFavorites(id);
+  async deleteTrack(trackId: string) {
+    const track = await this.favoritesDBService.favoriteTracks.findUnique({
+      where: { trackId },
+    });
+
+    if (!track) throw new NotFoundException();
+
+    await this.favoritesDBService.favoriteTracks.delete({
+      where: { trackId },
+    });
   }
 }
