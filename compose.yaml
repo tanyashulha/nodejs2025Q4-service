@@ -18,7 +18,8 @@ services:
       - hls-network
   
   postgres:
-    image: postgres:alpine
+    image: tatsianashulha/home-library_database
+    container_name: postgres
     restart: always
     environment:
       - POSTGRES_DB=${NAME}
