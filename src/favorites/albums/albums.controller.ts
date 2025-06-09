@@ -10,7 +10,7 @@ import { FavoriteAlbumService } from './albums.service';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Favorites')
-@Controller('favorites/albums')
+@Controller('favs/album')
 export class FavoriteAlbumController {
   constructor(private service: FavoriteAlbumService) {}
 

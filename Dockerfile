@@ -1,5 +1,5 @@
 ARG NODE_VERSION=22.14.0
-FROM node:${NODE_VERSION}-alpine
+FROM node:${NODE_VERSION}-alpine AS development
 WORKDIR /usr/src/app
 COPY package*.json .
 COPY prisma ./prisma/
