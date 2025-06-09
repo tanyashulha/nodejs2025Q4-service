@@ -16,7 +16,6 @@ services:
       - ${PORT}:${PORT}
     networks:
       - ${NAME}
-    working_dir: /app
   
   postgres:
     image: tatsianashulha/home-library_database
