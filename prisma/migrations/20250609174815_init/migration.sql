@@ -41,21 +41,21 @@ CREATE TABLE "Album" (
 );
 
 -- CreateTable
-CREATE TABLE "FavoriteArtist" (
+CREATE TABLE "FavoriteArtists" (
     "artistId" TEXT NOT NULL,
 
     CONSTRAINT "FavoriteArtist_pkey" PRIMARY KEY ("artistId")
 );
 
 -- CreateTable
-CREATE TABLE "FavoriteAlbum" (
+CREATE TABLE "FavoriteAlbums" (
     "albumId" TEXT NOT NULL,
 
     CONSTRAINT "FavoriteAlbum_pkey" PRIMARY KEY ("albumId")
 );
 
 -- CreateTable
-CREATE TABLE "FavoriteTrack" (
+CREATE TABLE "FavoriteTracks" (
     "trackId" TEXT NOT NULL,
 
     CONSTRAINT "FavoriteTrack_pkey" PRIMARY KEY ("trackId")
@@ -71,10 +71,10 @@ ALTER TABLE "Track" ADD CONSTRAINT "Track_albumId_fkey" FOREIGN KEY ("albumId") 
 ALTER TABLE "Album" ADD CONSTRAINT "Album_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FavoriteArtist" ADD CONSTRAINT "FavoriteArtist_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "FavoriteArtists" ADD CONSTRAINT "FavoriteArtist_artistId_fkey" FOREIGN KEY ("artistId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FavoriteAlbum" ADD CONSTRAINT "FavoriteAlbum_albumId_fkey" FOREIGN KEY ("albumId") REFERENCES "Album"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "FavoriteAlbums" ADD CONSTRAINT "FavoriteAlbum_albumId_fkey" FOREIGN KEY ("albumId") REFERENCES "Album"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FavoriteTrack" ADD CONSTRAINT "FavoriteTrack_trackId_fkey" FOREIGN KEY ("trackId") REFERENCES "Track"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "FavoriteTracks" ADD CONSTRAINT "FavoriteTrack_trackId_fkey" FOREIGN KEY ("trackId") REFERENCES "Track"("id") ON DELETE CASCADE ON UPDATE CASCADE;
