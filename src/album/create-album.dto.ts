@@ -1,4 +1,5 @@
-import { IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
+import { IsNullable } from 'src/track/is-nullable';
 
 export class CreateAlbumDto {
   @IsString()
@@ -7,8 +8,7 @@ export class CreateAlbumDto {
   @IsNumber()
   year: number;
 
-  @IsOptional()
+  @IsNullable()
   @IsString()
-  @IsUUID()
-  artistId?: string;
+  artistId: string | null;
 }

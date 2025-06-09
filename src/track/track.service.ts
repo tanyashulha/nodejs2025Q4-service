@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { CreateTrackDto } from './create-track.dto';
 import { UpdateTrackDto } from './update-track.dto';
 import { DataBaseService } from 'src/db/db.service';
@@ -13,7 +17,8 @@ export class TrackService {
       data: track,
     });
 
-    return new Track(created);
+    if (created) return new Track(created);
+    throw new UnprocessableEntityException();
   }
 
   getAllTracks() {
@@ -31,11 +36,11 @@ export class TrackService {
   }
 
   async updateTrackById(id: string, dto: UpdateTrackDto) {
-    const updatedTrack = this.trackDBService.track.findUnique({
+    const track = await this.trackDBService.track.findUnique({
       where: { id },
     });
 
-    if (!updatedTrack) throw new NotFoundException();
+    if (!track) throw new NotFoundException();
 
     return await this.trackDBService.track.update({
       where: { id },

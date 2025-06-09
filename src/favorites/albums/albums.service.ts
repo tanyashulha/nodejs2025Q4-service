@@ -10,6 +10,12 @@ export class FavoriteAlbumService {
   constructor(private favoritesDBService: DataBaseService) {}
 
   async createAlbum(id: string) {
+    const existing = await this.favoritesDBService.album.findUnique({
+      where: { id },
+    });
+
+    if (!existing) throw new UnprocessableEntityException();
+
     const album = await this.favoritesDBService.favoriteAlbums.create({
       data: { albumId: id },
       select: { album: true },

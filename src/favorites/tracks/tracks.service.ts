@@ -10,6 +10,12 @@ export class FavoriteTrackService {
   constructor(private favoritesDBService: DataBaseService) {}
 
   async createTrack(id: string) {
+    const existing = await this.favoritesDBService.track.findUnique({
+      where: { id },
+    });
+
+    if (!existing) throw new UnprocessableEntityException();
+
     const track = await this.favoritesDBService.favoriteTracks.create({
       data: { trackId: id },
       select: { track: true },

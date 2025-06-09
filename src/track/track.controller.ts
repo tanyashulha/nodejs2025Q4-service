@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseUUIDPipe,
   Post,
@@ -42,6 +43,7 @@ export class TrackController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   async deleteTrackById(@Param('id', ParseUUIDPipe) id: string) {
     return await this.trackService.deleteTrackById(id);
   }

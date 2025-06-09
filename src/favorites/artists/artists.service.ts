@@ -11,6 +11,12 @@ export class FavoriteArtistService {
   constructor(private favoritesDBService: DataBaseService) {}
 
   async createArtist(id: string) {
+    const existing = await this.favoritesDBService.artist.findUnique({
+      where: { id },
+    });
+
+    if (!existing) throw new UnprocessableEntityException();
+
     const artist = await this.favoritesDBService.favoriteArtists.create({
       data: { artistId: id },
       select: { artist: true },
