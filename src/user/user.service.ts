@@ -1,13 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './create-user.dto';
 import { DataBaseService } from 'src/db/db.service';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class UserService {
   constructor(private userDbService: DataBaseService) {}
 
   async post(user: CreateUserDto) {
-    return await this.userDbService.user.create({ data: user });
+    const created = await this.userDbService.user.create({ data: user });
+
+    return new User({
+      createdAt: created.createdAt,
+      updatedAt: created.updatedAt,
+      id: created.id,
+      login: user.login,
+      version: created.version,
+    });
   }
 
   async getAllUsers() {
@@ -31,6 +40,12 @@ export class UserService {
   }
 
   async deleteUserById(id: string) {
-    return await this.userDbService.user.delete({ where: { id } });
+    const user = await this.userDbService.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) throw new NotFoundException();
+
+    await this.userDbService.user.delete({ where: { id } });
   }
 }

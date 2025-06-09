@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
@@ -19,10 +18,8 @@ export class TrackController {
   constructor(private trackService: TrackService) {}
 
   @Post()
-  post(@Body() dto: CreateTrackDto) {
-    const track = this.trackService.post(dto);
-
-    return new Track(track);
+  async post(@Body() dto: CreateTrackDto) {
+    return await this.trackService.post(dto);
   }
 
   @Get()
@@ -33,10 +30,7 @@ export class TrackController {
 
   @Get(':id')
   async getTrackById(@Param('id', ParseUUIDPipe) id: string) {
-    const existingTrack = await this.trackService.getTrackById(id);
-    if (existingTrack) return new Track(existingTrack);
-
-    throw new NotFoundException();
+    return await this.trackService.getTrackById(id);
   }
 
   @Put(':id')
@@ -44,16 +38,11 @@ export class TrackController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateTrackDto,
   ) {
-    const updatedTrack = await this.trackService.updateTrackById(id, dto);
-    if (updatedTrack) return true;
-
-    throw new NotFoundException();
+    return await this.trackService.updateTrackById(id, dto);
   }
 
   @Delete(':id')
   async deleteTrackById(@Param('id', ParseUUIDPipe) id: string) {
-    const isTrackDeleted = await this.trackService.deleteTrackById(id);
-    if (isTrackDeleted) return true;
-    throw new NotFoundException();
+    return await this.trackService.deleteTrackById(id);
   }
 }

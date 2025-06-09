@@ -46,17 +46,12 @@ export class ArtistController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateArtistDto,
   ) {
-    const updatedArtist = await this.service.updateArtistById(id, dto);
-    if (updatedArtist) return true;
-
-    throw new NotFoundException();
+    return await this.service.updateArtistById(id, dto);
   }
 
   @Delete(':id')
   @HttpCode(204)
   async deleteArtistById(@Param('id', ParseUUIDPipe) id: string) {
-    const isArtistDeleted = await this.service.deleteArtistById(id);
-    if (isArtistDeleted) return true;
-    throw new NotFoundException();
+    return await this.service.deleteArtistById(id);
   }
 }

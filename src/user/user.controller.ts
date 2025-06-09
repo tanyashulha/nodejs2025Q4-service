@@ -22,9 +22,7 @@ export class UserController {
 
   @Post()
   async post(@Body() createUserDto: CreateUserDto) {
-    const newUser = await this.userService.post(createUserDto);
-
-    return new User(newUser);
+    return await this.userService.post(createUserDto);
   }
 
   @Get()
@@ -75,8 +73,6 @@ export class UserController {
   @Delete(':id')
   @HttpCode(204)
   async deleteUserById(@Param('id', ParseUUIDPipe) id: string) {
-    const existingUser = await this.userService.deleteUserById(id);
-    if (existingUser) return true;
-    throw new NotFoundException();
+    return await this.userService.deleteUserById(id);
   }
 }

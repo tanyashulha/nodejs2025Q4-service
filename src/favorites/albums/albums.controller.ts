@@ -2,11 +2,9 @@ import {
   Controller,
   Delete,
   HttpCode,
-  NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
-  UnprocessableEntityException,
 } from '@nestjs/common';
 import { FavoriteAlbumService } from './albums.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -18,16 +16,12 @@ export class FavoriteAlbumController {
 
   @Post(':id')
   async createAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    const addedAlbum = await this.service.createAlbum(id);
-    if (addedAlbum) return addedAlbum;
-    throw new UnprocessableEntityException();
+    return await this.service.createAlbum(id);
   }
 
   @Delete(':id')
   @HttpCode(204)
   async deleteAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    const deletedAlbum = await this.service.deleteAlbum(id);
-    if (deletedAlbum) return true;
-    throw new NotFoundException();
+    return await this.service.deleteAlbum(id);
   }
 }
