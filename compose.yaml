@@ -20,6 +20,8 @@ services:
   postgres:
     image: tatsianashulha/home-library_database
     container_name: postgres
+    build:
+      dockerfile: ./src/db/Dockerfile
     restart: on-failure
     environment:
       - POSTGRES_DB=${NAME}
@@ -28,7 +30,7 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
-      - ${DB_PORT}:5432
+      - ${DB_PORT}:${DB_PORT}
     networks:
       - ${NAME}
 
