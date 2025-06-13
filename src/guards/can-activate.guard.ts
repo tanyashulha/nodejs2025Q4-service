@@ -33,6 +33,8 @@ export class CanActivateGuard implements CanActivate {
 
       return true;
     }
+
+    return true;
   }
 
   getToken(ctx: ExecutionContext) {
