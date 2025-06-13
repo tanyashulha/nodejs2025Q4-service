@@ -15,10 +15,7 @@ export class AuthService {
     const user = await this.userService.getUser(dto.login);
     if (!user) throw new ForbiddenException();
 
-    const accessToken = await this.jwtService.signAsync({
-      login: user.login,
-      userId: user.id,
-    });
+    const accessToken = await this.generateAccessToken(user.login, user.id);
 
     if (!accessToken) throw new ForbiddenException();
 
@@ -28,10 +25,7 @@ export class AuthService {
   async signup(dto: AuthDto) {
     const user = await this.userService.post(dto);
 
-    const accessToken = await this.jwtService.signAsync({
-      login: user.login,
-      userId: user.id,
-    });
+    const accessToken = await this.generateAccessToken(user.login, user.id);
 
     if (!accessToken && !user) throw new ForbiddenException();
 
@@ -42,4 +36,11 @@ export class AuthService {
   }
 
   refresh(dto: RefreshDto) {}
+
+  async generateAccessToken(login: string, userId: string): Promise<string> {
+    return await this.jwtService.signAsync({
+      login,
+      userId,
+    });
+  }
 }
