@@ -14,7 +14,7 @@ export class AuthService {
   ) {}
 
   async login(dto: AuthDto) {
-    const user = await this.userService.getUser(dto.login);
+    const user = await this.userService.getUser(dto.login, dto.password);
     if (!user) throw new ForbiddenException();
 
     const accessToken = await this.generateAccessToken(user.login, user.id);

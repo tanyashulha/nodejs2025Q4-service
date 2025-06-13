@@ -2,13 +2,30 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './create-user.dto';
 import { DataBaseService } from 'src/db/db.service';
 import { User } from 'src/entities/user.entity';
+import { ConfigService } from '@nestjs/config';
+import { hashPasswordUtil } from 'src/utils/hash-password.utils';
+import { comparePasswordsUtil } from 'src/utils/compare-passwords.utils';
 
 @Injectable()
 export class UserService {
-  constructor(private userDbService: DataBaseService) {}
+  constructor(
+    private userDbService: DataBaseService,
+    private configService: ConfigService,
+  ) {}
 
   async post(user: CreateUserDto) {
-    const created = await this.userDbService.user.create({ data: user });
+    const cryptSalt: number = parseInt(
+      this.configService.get('CRYPT_SALT', '10'),
+    );
+
+    const hash = await hashPasswordUtil(user.password, cryptSalt);
+
+    const created = await this.userDbService.user.create({
+      data: {
+        ...user,
+        password: hash,
+      },
+    });
 
     return new User({
       createdAt: created.createdAt,
@@ -30,10 +47,15 @@ export class UserService {
   }
 
   async updateUserById(id: string, password: string) {
+    const cryptSalt: number = parseInt(
+      this.configService.get('CRYPT_SALT', '10'),
+    );
+    const hash = await hashPasswordUtil(password, cryptSalt);
+
     return this.userDbService.user.update({
       where: { id },
       data: {
-        password: password,
+        password: hash,
         version: { increment: 1 },
       },
     });
@@ -49,11 +71,16 @@ export class UserService {
     await this.userDbService.user.delete({ where: { id } });
   }
 
-  async getUser(login: string) {
+  async getUser(login: string, password: string) {
     const existingUser = await this.userDbService.user.findUnique({
       where: { login },
     });
 
-    if (existingUser) return existingUser;
+    const isValid = await comparePasswordsUtil(
+      password,
+      existingUser?.password,
+    );
+
+    if (existingUser && isValid) return existingUser;
   }
 }
