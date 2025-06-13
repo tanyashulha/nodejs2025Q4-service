@@ -5,6 +5,7 @@ import { ArtistModule } from './artist/artist.module';
 import { UserModule } from './user/user.module';
 import { AlbumModule } from './album/album.module';
 import { DatabaseModule } from './db/db.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { DatabaseModule } from './db/db.module';
     UserModule,
     AlbumModule,
     DatabaseModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
