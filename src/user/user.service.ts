@@ -48,4 +48,12 @@ export class UserService {
 
     await this.userDbService.user.delete({ where: { id } });
   }
+
+  async getUser(login: string) {
+    const existingUser = await this.userDbService.user.findUnique({
+      where: { login },
+    });
+
+    if (existingUser) return existingUser;
+  }
 }

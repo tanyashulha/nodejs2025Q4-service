@@ -1,2 +1,0 @@
-FROM postgres:17.5-alpine
-EXPOSE ${POSTGRES_PORT}
