@@ -69,7 +69,7 @@ export class UserController {
       updateUserDto.newPassword,
     );
 
-    if (updated) return true;
+    if (updated) return new User(updated);
 
     throw new NotFoundException();
   }

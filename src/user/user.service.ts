@@ -52,13 +52,15 @@ export class UserService {
     );
     const hash = await hashPasswordUtil(password, cryptSalt);
 
-    return this.userDbService.user.update({
+    const updated = await this.userDbService.user.update({
       where: { id },
       data: {
         password: hash,
         version: { increment: 1 },
       },
     });
+
+    if (updated) return updated;
   }
 
   async deleteUserById(id: string) {
