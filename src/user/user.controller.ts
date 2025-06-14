@@ -15,6 +15,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './create-user.dto';
 import { UpdateUserDto } from './update-uset.dto';
 import { User } from 'src/entities/user.entity';
+import { comparePasswordsUtil } from 'src/utils/compare-passwords.utils';
 
 @Controller('user')
 export class UserController {
@@ -57,8 +58,11 @@ export class UserController {
 
     if (!existingUser) throw new NotFoundException();
 
-    if (existingUser.password !== updateUserDto.oldPassword)
-      throw new ForbiddenException();
+    const isPasswordValid = await comparePasswordsUtil(
+      existingUser.password,
+      updateUserDto.oldPassword,
+    );
+    if (!isPasswordValid) throw new ForbiddenException();
 
     const updated = this.userService.updateUserById(
       id,
