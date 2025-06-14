@@ -12,13 +12,12 @@ const DEFAULT_PORT = 4000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  const jwtService = app.get(JwtService);
+  const reflector = app.get(Reflector);
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalGuards(
-    new CanActivateGuard(
-      app.get(ConfigService),
-      app.get(JwtService),
-      app.get(Reflector),
-    ),
+    new CanActivateGuard(configService, jwtService, reflector),
   );
   const configuration = new DocumentBuilder()
     .setTitle('REST Service')

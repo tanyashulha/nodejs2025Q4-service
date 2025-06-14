@@ -4,6 +4,7 @@ import { DataBaseService } from 'src/db/db.service';
 import { ConfigService } from '@nestjs/config';
 import { hashPasswordUtil } from 'src/utils/hash-password.utils';
 import { comparePasswordsUtil } from 'src/utils/compare-passwords.utils';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -19,11 +20,19 @@ export class UserService {
 
     const hash = await hashPasswordUtil(user.password, cryptSalt);
 
-    return await this.userDbService.user.create({
+    const created = await this.userDbService.user.create({
       data: {
         ...user,
         password: hash,
       },
+    });
+
+    return new User({
+      createdAt: created.createdAt,
+      updatedAt: created.updatedAt,
+      id: created.id,
+      login: user.login,
+      version: created.version,
     });
   }
 

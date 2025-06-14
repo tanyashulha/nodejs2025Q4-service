@@ -7,6 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { IS_PUBLIC_KEY } from 'src/decorators/is-public.decorator';
 
 @Injectable()
 export class CanActivateGuard implements CanActivate {
@@ -17,35 +18,34 @@ export class CanActivateGuard implements CanActivate {
   ) {}
 
   async canActivate(ctx: ExecutionContext) {
-    const isPublic = this.isPublickKey(ctx);
-    if (!isPublic) {
-      const token = this.getToken(ctx);
+    const isPublic = await this.isPublickKey(ctx);
 
-      if (!token) throw new UnauthorizedException();
+    if (isPublic) return true;
 
-      const result = await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get('JWT_SECRET_KEY'),
-      });
+    const req = ctx.switchToHttp().getRequest();
+    const token = this.getToken(req);
 
-      if (!result) throw new UnauthorizedException();
+    if (!token) throw new UnauthorizedException();
 
-      ctx.switchToHttp().getRequest()['user'] = result;
+    const result = await this.jwtService.verifyAsync(token, {
+      secret: this.configService.get('JWT_SECRET_KEY'),
+    });
 
-      return true;
-    }
+    if (!result) throw new UnauthorizedException();
+
+    req['user'] = result;
 
     return true;
   }
 
-  getToken(ctx: ExecutionContext) {
-    const req = ctx.switchToHttp().getRequest();
-    const [type, token] = req.headers.authorization?.split(' ');
+  getToken(req) {
+    const [type, token] = req.headers.authorization?.split(' ') || [];
 
     return type === 'Bearer' ? token : null;
   }
 
   async isPublickKey(ctx: ExecutionContext) {
-    return await this.reflector.getAllAndOverride<boolean>('isPublic', [
+    return await this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       ctx.getHandler(),
       ctx.getClass(),
     ]);
