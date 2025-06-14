@@ -7,6 +7,7 @@ import { AlbumModule } from './album/album.module';
 import { DatabaseModule } from './db/db.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { LoggingModule } from './logging/logging.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ConfigModule } from '@nestjs/config';
     AlbumModule,
     DatabaseModule,
     AuthModule,
+    LoggingModule,
   ],
 })
 export class AppModule {}
