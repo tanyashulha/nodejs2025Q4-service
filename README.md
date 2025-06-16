@@ -32,3 +32,5 @@ npm run test:auth
 ```
 npm run test:refresh
 ```
+
+if some tests didnt pass pls use docker exec -it home-library-rest-service sh --> npx prisma migrate reset
