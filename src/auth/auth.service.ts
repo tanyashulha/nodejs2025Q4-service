@@ -44,24 +44,28 @@ export class AuthService {
   }
 
   async refresh(dto: RefreshDto) {
-    const params = await this.jwtService.verifyAsync(dto.refreshToken, {
-      secret: this.configService.get('JWT_SECRET_REFRESH_KEY'),
-    });
+    try {
+      const params = await this.jwtService.verifyAsync(dto.refreshToken, {
+        secret: this.configService.get('JWT_SECRET_REFRESH_KEY'),
+      });
 
-    if (!params) throw new ForbiddenException();
+      const accessToken = await this.generateAccessToken(
+        params.login,
+        params.userId,
+      );
 
-    const accessToken = await this.generateAccessToken(params.login, params.id);
-    const refreshToken = await this.generateRefreshToken(
-      params.login,
-      params.id,
-    );
+      const refreshToken = await this.generateRefreshToken(
+        params.login,
+        params.userId,
+      );
 
-    if (!accessToken && !refreshToken) throw new ForbiddenException();
-
-    return {
-      accessToken,
-      refreshToken,
-    };
+      return {
+        accessToken,
+        refreshToken,
+      };
+    } catch {
+      throw new ForbiddenException();
+    }
   }
 
   async generateAccessToken(login: string, userId: string): Promise<string> {
