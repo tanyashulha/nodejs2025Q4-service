@@ -7,23 +7,23 @@ import { TrackDBService } from 'src/db/track-db/track-db.service';
 export class TrackService {
   constructor(private trackDBService: TrackDBService) {}
 
-  post(dto: CreateTrackDto) {
-    return this.trackDBService.add(dto);
+  async post(dto: CreateTrackDto) {
+    return await this.trackDBService.add(dto);
   }
 
-  getAllTracks() {
-    return this.trackDBService.getAllTracks();
+  async getAllTracks() {
+    return await this.trackDBService.getAllTracks();
   }
 
-  getTrackById(id: string) {
-    return this.trackDBService.getTrackById(id);
+  async getTrackById(id: string) {
+    return await this.trackDBService.getTrackById(id);
   }
 
-  updateTrackById(id: string, dto: UpdateTrackDto) {
-    return this.trackDBService.updateTrackById({ ...dto, id });
+  async updateTrackById(id: string, dto: UpdateTrackDto) {
+    return await this.trackDBService.updateTrackById({ ...dto, id });
   }
 
-  deleteTrackById(id: string) {
-    return this.trackDBService.deleteTrackById(id);
+  async deleteTrackById(id: string) {
+    return await this.trackDBService.deleteTrackById(id);
   }
 }

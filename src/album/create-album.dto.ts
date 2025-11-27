@@ -1,4 +1,5 @@
 import { IsNumber, IsString } from 'class-validator';
+import { IsNullable } from 'src/is-null';
 
 export class CreateAlbumDto {
   @IsString()
@@ -8,5 +9,6 @@ export class CreateAlbumDto {
   year: number;
 
   @IsString()
+  @IsNullable()
   artistId: string;
 }

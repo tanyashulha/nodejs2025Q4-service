@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   NotFoundException,
   Param,
   ParseUUIDPipe,
@@ -12,29 +13,27 @@ import {
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './create-track.dto';
 import { UpdateTrackDto } from './update-track.dto';
-import { Track } from 'src/entities/track.entity';
 
 @Controller('track')
 export class TrackController {
   constructor(private trackService: TrackService) {}
 
   @Post()
-  post(@Body() dto: CreateTrackDto) {
-    const track = this.trackService.post(dto);
-
-    return new Track(track);
+  @HttpCode(201)
+  async post(@Body() dto: CreateTrackDto) {
+    return await this.trackService.post(dto);
   }
 
   @Get()
   async getAllTracks() {
     const tracks = await this.trackService.getAllTracks();
-    return tracks.map((track) => new Track(track));
+    return tracks.map((track) => track);
   }
 
   @Get(':id')
   async getTrackById(@Param('id', ParseUUIDPipe) id: string) {
     const existingTrack = await this.trackService.getTrackById(id);
-    if (existingTrack) return new Track(existingTrack);
+    if (existingTrack) return existingTrack;
 
     throw new NotFoundException();
   }
@@ -45,7 +44,7 @@ export class TrackController {
     @Body() dto: UpdateTrackDto,
   ) {
     const updatedTrack = await this.trackService.updateTrackById(id, dto);
-    if (updatedTrack) return true;
+    if (updatedTrack) return updatedTrack;
 
     throw new NotFoundException();
   }

@@ -1,14 +1,17 @@
 import { IsNumber, IsString } from 'class-validator';
+import { IsNullable } from 'src/is-null';
 
 export class CreateTrackDto {
   @IsString()
   name: string;
 
   @IsString()
-  artistId: string;
+  @IsNullable()
+  artistId: string | null;
 
   @IsString()
-  albumId: string;
+  @IsNullable()
+  albumId: string | null;
 
   @IsNumber()
   duration: number;

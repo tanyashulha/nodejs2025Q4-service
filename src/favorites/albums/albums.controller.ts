@@ -17,6 +17,7 @@ export class FavoriteAlbumController {
   constructor(private service: FavoriteAlbumService) {}
 
   @Post(':id')
+  @HttpCode(201)
   async createAlbum(@Param('id', ParseUUIDPipe) id: string) {
     const addedAlbum = await this.service.createAlbum(id);
     if (addedAlbum) return addedAlbum;
@@ -27,7 +28,7 @@ export class FavoriteAlbumController {
   @HttpCode(204)
   async deleteAlbum(@Param('id', ParseUUIDPipe) id: string) {
     const deletedAlbum = await this.service.deleteAlbum(id);
-    if (deletedAlbum) return true;
+    if (deletedAlbum) return deletedAlbum;
     throw new NotFoundException();
   }
 }

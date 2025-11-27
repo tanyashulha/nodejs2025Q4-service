@@ -28,7 +28,7 @@ export class FavoriteTrackController {
   @HttpCode(204)
   async delete(@Param('id', ParseUUIDPipe) id: string) {
     const deletedTrack = await this.service.deleteTrack(id);
-    if (deletedTrack) return true;
+    if (deletedTrack) return deletedTrack;
     throw new NotFoundException();
   }
 }

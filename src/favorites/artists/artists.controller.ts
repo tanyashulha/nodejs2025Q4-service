@@ -28,7 +28,7 @@ export class FavoriteArtistController {
   @HttpCode(204)
   async deleteArtist(@Param('id', ParseUUIDPipe) id: string) {
     const deletedArtist = await this.service.deleteArtist(id);
-    if (deletedArtist) return true;
+    if (deletedArtist) return deletedArtist;
     throw new NotFoundException();
   }
 }
