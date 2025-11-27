@@ -26,10 +26,10 @@ export class UserService {
 
   async updateUserById(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.getUserById(id);
-
     const updatedUser = {
       ...user,
       version: user.version + 1,
+      updatedAt: Date.now(),
       password: updateUserDto.newPassword,
     };
 

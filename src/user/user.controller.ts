@@ -64,7 +64,7 @@ export class UserController {
 
     const updated = this.userService.updateUserById(id, updateUserDto);
 
-    if (updated) return true;
+    if (updated) return new User(updated);
 
     throw new NotFoundException();
   }
