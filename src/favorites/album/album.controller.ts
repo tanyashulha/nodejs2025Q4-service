@@ -1,0 +1,34 @@
+import {
+  Controller,
+  Delete,
+  HttpCode,
+  NotFoundException,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  UnprocessableEntityException,
+} from '@nestjs/common';
+import { FavoriteAlbumService } from './album.service';
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('Favorites')
+@Controller('favs/album')
+export class FavoriteAlbumController {
+  constructor(private service: FavoriteAlbumService) {}
+
+  @Post(':id')
+  @HttpCode(201)
+  async createAlbum(@Param('id', ParseUUIDPipe) id: string) {
+    const addedAlbum = await this.service.createAlbum(id);
+    if (addedAlbum) return addedAlbum;
+    throw new UnprocessableEntityException();
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  async deleteAlbum(@Param('id', ParseUUIDPipe) id: string) {
+    const deletedAlbum = await this.service.deleteAlbum(id);
+    if (deletedAlbum) return deletedAlbum;
+    throw new NotFoundException();
+  }
+}

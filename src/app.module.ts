@@ -1,10 +1,19 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { TrackModule } from './track/track.module';
+import { FavoritesModule } from './favorites/favorites.module';
+import { ArtistModule } from './artist/artist.module';
+import { UserModule } from './user/user.module';
+import { AlbumModule } from './album/album.module';
+import { DatabaseModule } from './db/db.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    TrackModule,
+    FavoritesModule,
+    ArtistModule,
+    UserModule,
+    AlbumModule,
+    DatabaseModule,
+  ],
 })
 export class AppModule {}
