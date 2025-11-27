@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { FavoriteArtistController } from './artists.controller';
-import { FavoriteArtistService } from './artists.service';
+import { FavoriteArtistController } from './artist.controller';
+import { FavoriteArtistService } from './artist.service';
 
 @Module({
   controllers: [FavoriteArtistController],

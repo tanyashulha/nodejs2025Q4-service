@@ -26,8 +26,7 @@ export class TrackController {
 
   @Get()
   async getAllTracks() {
-    const tracks = await this.trackService.getAllTracks();
-    return tracks.map((track) => track);
+    return await this.trackService.getAllTracks();
   }
 
   @Get(':id')
@@ -50,9 +49,10 @@ export class TrackController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   async deleteTrackById(@Param('id', ParseUUIDPipe) id: string) {
     const isTrackDeleted = await this.trackService.deleteTrackById(id);
-    if (isTrackDeleted) return true;
+    if (isTrackDeleted) return;
     throw new NotFoundException();
   }
 }

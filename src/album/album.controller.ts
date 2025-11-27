@@ -13,31 +13,27 @@ import {
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './create-album.dto';
 import { UpdateAlbumDto } from './update-album.dto';
-import { Album } from 'src/entities/album.entity';
 
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
   @Post()
+  @HttpCode(201)
   post(@Body() dto: CreateAlbumDto) {
     const newAlbum = this.albumService.post(dto);
-
-    return new Album(newAlbum);
+    return newAlbum;
   }
 
   @Get()
   async getAllAlbums() {
-    const albums = await this.albumService.getAllAlbums();
-
-    return albums.map((album) => new Album(album));
+    return await this.albumService.getAllAlbums();
   }
 
   @Get(':id')
   async getAlbumById(@Param('id', ParseUUIDPipe) id: string) {
     const album = await this.albumService.getAlbumById(id);
-    if (album) return new Album(album);
-
+    if (album) return album;
     throw new NotFoundException();
   }
 
@@ -47,8 +43,7 @@ export class AlbumController {
     @Body() dto: UpdateAlbumDto,
   ) {
     const updatedAlbum = await this.albumService.updateAlbumById(id, dto);
-    if (updatedAlbum) return true;
-
+    if (updatedAlbum) return updatedAlbum;
     throw new NotFoundException();
   }
 
@@ -56,7 +51,6 @@ export class AlbumController {
   @HttpCode(204)
   async deleteAlbumById(@Param('id', ParseUUIDPipe) id: string) {
     const isAlbumDeleted = await this.albumService.deleteAlbumById(id);
-    if (isAlbumDeleted) return true;
-    throw new NotFoundException();
+    if (!isAlbumDeleted) throw new NotFoundException();
   }
 }

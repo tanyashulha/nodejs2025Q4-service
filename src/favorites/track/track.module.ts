@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { FavoriteTrackController } from './tracks.controller';
-import { FavoriteTrackService } from './tracks.service';
+import { FavoriteTrackController } from './track.controller';
+import { FavoriteTrackService } from './track.service';
 
 @Module({
   controllers: [FavoriteTrackController],

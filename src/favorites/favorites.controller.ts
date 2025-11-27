@@ -3,7 +3,7 @@ import { FavoritesService } from './favorites.service';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Favorites')
-@Controller('favorites')
+@Controller('favs')
 export class FavoritesController {
   constructor(private favoritesService: FavoritesService) {}
 

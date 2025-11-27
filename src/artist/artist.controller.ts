@@ -1,4 +1,3 @@
-import { Artist } from './../entities/artist.entity';
 import {
   Body,
   Controller,
@@ -23,20 +22,18 @@ export class ArtistController {
   post(@Body() dto: CreateArtistDto) {
     const artist = this.service.post(dto);
 
-    return new Artist(artist);
+    return artist;
   }
 
   @Get()
   async getAllArtists() {
-    const artists = await this.service.getAllArtists();
-
-    return artists.map((artist) => new Artist(artist));
+    return await this.service.getAllArtists();
   }
 
   @Get(':id')
   async getArtistById(@Param('id', ParseUUIDPipe) id: string) {
     const artist = await this.service.getArtistById(id);
-    if (artist) return new Artist(artist);
+    if (artist) return artist;
 
     throw new NotFoundException();
   }
@@ -47,7 +44,7 @@ export class ArtistController {
     @Body() dto: UpdateArtistDto,
   ) {
     const updatedArtist = await this.service.updateArtistById(id, dto);
-    if (updatedArtist) return true;
+    if (updatedArtist) return updatedArtist;
 
     throw new NotFoundException();
   }
@@ -56,7 +53,6 @@ export class ArtistController {
   @HttpCode(204)
   async deleteArtistById(@Param('id', ParseUUIDPipe) id: string) {
     const isArtistDeleted = await this.service.deleteArtistById(id);
-    if (isArtistDeleted) return true;
-    throw new NotFoundException();
+    if (!isArtistDeleted) throw new NotFoundException();
   }
 }

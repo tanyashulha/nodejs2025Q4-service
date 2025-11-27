@@ -25,15 +25,15 @@ export class FavoriesDBService {
   ) {}
 
   async getAllFavoriteAlbums(): Promise<Array<IAlbum>> {
-    return await this.favorites.albums.map(this.albumDBService.getAlbumById);
+    return this.favorites.albums.map(this.albumDBService.getAlbumById);
   }
 
   async getAllFavoriteAertists(): Promise<Array<IArtist>> {
-    return await this.favorites.artists.map(this.artistDBService.getArtistById);
+    return this.favorites.artists.map(this.artistDBService.getArtistById);
   }
 
   async getAllFavoriteTracks(): Promise<Array<ITrack>> {
-    return await this.favorites.tracks.map(this.trackDBService.getTrackById);
+    return this.favorites.tracks.map(this.trackDBService.getTrackById);
   }
 
   async addAlbumToFavorites(id: string): Promise<IAlbum> {

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { FavoriteAlbumController } from './albums.controller';
-import { FavoriteAlbumService } from './albums.service';
+import { FavoriteAlbumController } from './album.controller';
+import { FavoriteAlbumService } from './album.service';
 
 @Module({
   controllers: [FavoriteAlbumController],
